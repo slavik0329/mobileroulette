@@ -1,0 +1,11 @@
+A, A:visited {
+  text-decoration: none;
+  font-weight: bold;
+  color: #3B5998;
+  border: 1px solid #CCC;
+  padding:3px;
+}
+body
+{
+    color:#444;
+}

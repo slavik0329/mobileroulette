@@ -1,0 +1,103 @@
+<?
+include("functions.php");
+
+class connection
+    {
+    public $rows;
+    private $server = "localhost";
+    private $db = "";
+    private $user = "";
+    private $pass = "";
+    private $result;
+    private $link;
+    private $exectime; //execution time
+    private $query;
+
+    function dumptable($table)
+    {
+        
+$result = mysql_query("SELECT * FROM $table");
+if (!$result) {
+    die("Query to show fields from table failed");
+}
+
+$fields_num = mysql_num_fields($result);
+
+$html.= "<h1>Table: $table</h1>";
+$html.="<table border='1'><tr>";
+// printing table headers
+for($i=0; $i<$fields_num; $i++)
+{
+    $field = mysql_fetch_field($result);
+$html.="<td>{$field->name}</td>";
+}
+$html.= "</tr>\n";
+// printing table rows
+while($row = mysql_fetch_row($result))
+{
+$html.= "<tr>";
+
+    // $row is array... foreach( .. ) puts every element
+    // of $row to $cell variable
+    foreach($row as $cell)
+$html.= "<td>$cell</td>";
+
+$html.= "</tr>\n";
+}
+      
+      
+      return $html;
+        
+    }
+    
+    
+    function connection()
+        {
+        $this->link=mysql_connect($this->server, $this->user, $this->pass) or die("couldn't connect to server");
+        $db        =mysql_select_db($this->db, $this->link) or die("Couldn't select database");
+        }
+
+    public function numFields() { return $this->numFields=@mysql_num_fields($this->result); }
+
+    public function numRows() { return $this->numRows=@mysql_num_rows($this->result); }
+
+    function echoquery()
+    {
+        echo $this->query;
+    }
+    
+    function execute($query)
+        {
+        $this->query   =$query;
+        $time_start    =microtime();
+        $this->result  =mysql_query($query);
+        $time_end      =microtime();
+        $this->exectime=round(($time_end - $time_start),5);
+
+        
+        
+        //$this->logquery();
+
+        return $this->result;
+        }
+
+    function fetch() { return $this->rows=mysql_fetch_array($this->result); }
+
+    function logquery()
+        {
+        
+        $fh        =fopen($this->myFile, 'a') or die("can't open file");
+        $dt=date("m/d/Y H:i:s");
+        $ip   =getenv("REMOTE_ADDR");
+    $host2=@gethostbyaddr($ip);
+        $stringData="$dt\t".$this->query . "\t" .$host2 ."\t" . $this->exectime . "\n";
+        fwrite($fh, $stringData);
+        fclose($fh);
+        }
+    }
+    
+
+
+    
+    
+?>
