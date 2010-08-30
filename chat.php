@@ -11,11 +11,12 @@ if (!$user->isuser($_REQUEST['device']))
 header("location: newuser.php?device=".$_REQUEST['device']);
 exit();
 }
-   $con= new connection();
-  $con->execute("update users set time='" . time() . "' where iduser='{$user->id}'");       
+
+$con= new connection();
+$con->execute("update users set time='" . time() . "' where iduser='{$user->id}'");       
 
 $chat= new chat();
-    $chat->closedeadrooms();
+$chat->closedeadrooms();
 
 
 if(!$chatid=$_GET['idchat'])
@@ -33,14 +34,10 @@ $chatid=$chat->createchat($user->id);
 }
 
 
-
-
 $count=$user->getusercount();
 ?>   
- <meta name = "viewport" content = "width=device-width, minimum-scale=1, maximum-scale=1 "> 
-
-                 <link rel="stylesheet" type="text/css" href="style.css" />
-
+<meta name = "viewport" content = "width=device-width, minimum-scale=1, maximum-scale=1 "> 
+<link rel="stylesheet" type="text/css" href="style.css" />
 
 <script src="js/jquery.js"></script>   
 
